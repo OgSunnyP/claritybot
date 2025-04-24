@@ -100,27 +100,29 @@
       const submitBtn = document.getElementById("submitBtn");
       const responseBox = document.getElementById("response");
 
-      const usageLimit = 3;
-      const usageKey = "claritybot_usage";
-      const unlockKey = "claritybot_unlocked";
+      const USAGE_KEY = "claritybot_usage";
+      const CREDITS_KEY = "claritybot_credits";
+      const MAX_FREE_MESSAGES = 3;
+      const UNLOCK_AMOUNT = 100;
 
-      // Check if user unlocked access
-      let unlocked =
-        localStorage.getItem(unlockKey) === "true" ||
-        window.location.search.includes("unlocked=true");
+      let usageCount = parseInt(localStorage.getItem(USAGE_KEY)) || 0;
+      let credits = parseInt(localStorage.getItem(CREDITS_KEY)) || 0;
+
+      // If Stripe redirect adds unlocked=true, grant credits
       if (window.location.search.includes("unlocked=true")) {
-        localStorage.setItem(unlockKey, "true");
-        unlocked = true;
+        credits += UNLOCK_AMOUNT;
+        localStorage.setItem(CREDITS_KEY, credits);
+        const url = new URL(window.location.href);
+        url.searchParams.delete("unlocked");
+        window.history.replaceState({}, document.title, url.toString()); // Clean the URL
       }
 
-      let usageCount = parseInt(localStorage.getItem(usageKey)) || 0;
-
-      if (!unlocked && usageCount >= usageLimit) {
+      if (usageCount >= MAX_FREE_MESSAGES + credits) {
         showPaywall();
       }
 
       async function analyze() {
-        if (!unlocked && usageCount >= usageLimit) {
+        if (usageCount >= MAX_FREE_MESSAGES + credits) {
           showPaywall();
           return;
         }
@@ -141,22 +143,23 @@
         const bubbles = parseResponse(raw);
         responseBox.innerHTML = bubbles;
 
-        if (!unlocked) {
-          usageCount++;
-          localStorage.setItem(usageKey, usageCount);
-          if (usageCount >= usageLimit) {
-            setTimeout(showPaywall, 500);
-          }
+        usageCount++;
+        localStorage.setItem(USAGE_KEY, usageCount);
+
+        if (usageCount >= MAX_FREE_MESSAGES + credits) {
+          setTimeout(showPaywall, 500);
         }
       }
 
       function showPaywall() {
         responseBox.innerHTML = `
           <div class="bubble explainer" style="text-align: center;">
-            <h3 style="margin-top: 0;">You’ve used your 3 free reflections 💬</h3>
-            <p style="margin-bottom: 1.5rem;">Unlock unlimited access for <strong>$3</strong> — support the project and keep chatting freely.</p>
+            <h3 style="margin-top: 0;">You’ve used your reflections 💬</h3>
+            <p style="margin-bottom: 1.5rem;">
+              Unlock <strong>100 more reflections</strong> for just <strong>$2</strong>.
+            </p>
 
-            <a href="https://buy.stripe.com/test_XXXXXX" target="_blank" style="text-decoration: none;">
+            <a href="https://buy.stripe.com/00gdRa4Wi7arcusaEE" target="_blank" style="text-decoration: none;">
               <button style="
                 background-color: #4f9fe8;
                 border: none;
@@ -167,12 +170,12 @@
                 font-weight: 600;
                 cursor: pointer;
                 transition: background-color 0.2s ease;
-              ">💳 Unlock Now</button>
+              ">💳 Unlock More Reflections</button>
             </a>
 
             <br /><br />
 
-            <button onclick="unlockApp()" style="
+            <button onclick="manuallyUnlock()" style="
               background-color: #e9f5ff;
               border: none;
               border-radius: 999px;
@@ -186,8 +189,9 @@
         `;
       }
 
-      function unlockApp() {
-        localStorage.setItem(unlockKey, "true");
+      function manuallyUnlock() {
+        credits += UNLOCK_AMOUNT;
+        localStorage.setItem(CREDITS_KEY, credits);
         location.reload();
       }
 
