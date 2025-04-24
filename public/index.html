@@ -152,32 +152,36 @@
 
       function showPaywall() {
         responseBox.innerHTML = `
-          <div class="bubble explainer">
+          <div class="bubble explainer" style="text-align: center;">
             <h3 style="margin-top: 0;">You’ve used your 3 free reflections 💬</h3>
-            <p>Unlock unlimited access for <strong>$3</strong> — support the project and keep chatting freely.</p>
-            <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-              <a href="https://buy.stripe.com/test_XXXXXX" target="_blank">
-                <button style="
-                  background-color: #4f9fe8;
-                  border: none;
-                  border-radius: 999px;
-                  padding: 10px 20px;
-                  color: white;
-                  font-size: 1rem;
-                  cursor: pointer;
-                  transition: background-color 0.2s ease;
-                ">💳 Unlock Now</button>
-              </a>
-              <button onclick="unlockApp()" style="
-                background-color: #e5f1fb;
+            <p style="margin-bottom: 1.5rem;">Unlock unlimited access for <strong>$3</strong> — support the project and keep chatting freely.</p>
+
+            <a href="https://buy.stripe.com/test_XXXXXX" target="_blank" style="text-decoration: none;">
+              <button style="
+                background-color: #4f9fe8;
                 border: none;
                 border-radius: 999px;
-                padding: 10px 20px;
-                font-size: 0.95rem;
+                padding: 12px 24px;
+                color: white;
+                font-size: 1rem;
+                font-weight: 600;
                 cursor: pointer;
-                color: #333;
-              ">✅ Already paid? Click here</button>
-            </div>
+                transition: background-color 0.2s ease;
+              ">💳 Unlock Now</button>
+            </a>
+
+            <br /><br />
+
+            <button onclick="unlockApp()" style="
+              background-color: #e9f5ff;
+              border: none;
+              border-radius: 999px;
+              padding: 10px 22px;
+              font-size: 0.95rem;
+              font-weight: 500;
+              cursor: pointer;
+              color: #333;
+            ">✅ Already paid? Click here</button>
           </div>
         `;
       }
