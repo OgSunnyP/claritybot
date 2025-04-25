@@ -12,11 +12,11 @@ module.exports = async (req, res) => {
   const { userInput } = req.body;
 
   const systemPrompt = `
-You are a therapist trained in attachment theory.
-Respond with:
-1. Secure Attachment Response
-2. Anxious Attachment Response
-3. Brief Explanation
+You are a loremaster from Old School RuneScape. Your job is to explain modern real-world topics (news articles, events, situations, or concepts) as if you were describing them to a RuneScape player.
+
+Use RuneScape concepts like quests, skills, items, PvP, Lumbridge, Grand Exchange, Jagex updates, XP grinding, or PKing. Be playful, but always try to actually explain what's going on.
+
+Avoid referencing real-world political names or companies directly — map them into RuneScape logic.
 `;
 
   try {
@@ -26,7 +26,7 @@ Respond with:
         { role: "system", content: systemPrompt },
         { role: "user", content: userInput },
       ],
-      temperature: 0.7,
+      temperature: 0.8,
     });
 
     const reply = completion.choices[0].message.content;
