@@ -7,23 +7,25 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #111; /* Dark RuneScape bank background */
+      background-color: #111;
       margin: 0;
-      padding: 20px;
-      color: #f5f5c6; /* RuneScape yellowish chat text */
+      padding: 0;
+      color: #f5f5c6;
+      overflow-x: hidden; /* 💥 prevents weird right overflow on mobile/desktop */
     }
     
     h1 {
       text-align: center;
       font-size: 28px;
-      color: #ffe500; /* RuneScape chatbox yellow */
-      margin-bottom: 20px;
+      color: #ffe500;
+      margin: 20px 0 10px;
     }
     
     .container {
       max-width: 600px;
+      width: 90%; /* 💥 fluid on mobile */
       margin: 0 auto;
-      background: #222; /* Slightly lighter panel background */
+      background: #222;
       border: 2px solid #555;
       border-radius: 8px;
       padding: 20px;
@@ -35,25 +37,26 @@
       height: 140px;
       margin-bottom: 10px;
       border: 2px solid #555;
-      background-color: #000; /* Dark text input like RuneScape */
+      background-color: #000;
       color: #f5f5c6;
       font-family: Arial, sans-serif;
-      font-size: 14px;
+      font-size: 16px;
       border-radius: 6px;
       padding: 10px;
+      resize: vertical;
     }
     
     button {
       display: block;
       width: 100%;
-      padding: 12px;
-      background-color: #006400; /* Darker RuneScape green */
+      padding: 14px;
+      background-color: #006400;
       color: #f5f5c6;
       font-family: Arial, sans-serif;
       font-weight: bold;
       border: 2px solid #003300;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
       margin-top: 10px;
     }
@@ -73,42 +76,30 @@
       border-radius: 8px;
       margin-bottom: 10px;
       color: #f5f5c6;
+      font-size: 16px;
+    }
+    
+    @media only screen and (max-width: 600px) {
+      h1 {
+        font-size: 22px;
+      }
+    
+      textarea {
+        height: 120px;
+        font-size: 16px;
+      }
+    
+      button {
+        font-size: 16px;
+        padding: 12px;
+      }
+    
+      .bubble {
+        font-size: 14px;
+      }
     }
     </style>
-    <style>
-      @media only screen and (max-width: 600px) {
-        body {
-          padding: 10px;
-        }
-        
-        .container {
-          width: 95%;
-          margin: 0 auto;
-          padding: 15px;
-          border-width: 2px;
-        }
-      
-        textarea {
-          font-size: 16px;
-          height: 120px;
-        }
-      
-        button {
-          font-size: 18px;
-          padding: 14px;
-        }
-      
-        .bubble {
-          font-size: 15px;
-          padding: 12px;
-        }
-      
-        h1 {
-          font-size: 24px;
-        }
-      }
-      </style>
-      
+    
     
     
 </head>
