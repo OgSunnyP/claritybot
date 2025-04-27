@@ -5,46 +5,41 @@
   <title>RuneScape Translator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400&display=swap');
-    
     body {
-      font-family: 'Pixelify Sans', Arial, sans-serif;
-      background-color: #f0e6d2;
-      background-image: url('https://i.imgur.com/YO7GGaG.png'); /* Optional old paper texture */
-      background-size: cover;
-      background-repeat: no-repeat;
+      font-family: Arial, sans-serif;
+      background-color: #111; /* Dark RuneScape bank background */
       margin: 0;
       padding: 20px;
-      color: #4b3b2b;
+      color: #f5f5c6; /* RuneScape yellowish chat text */
     }
     
     h1 {
       text-align: center;
-      font-size: 32px;
-      color: #705a36;
-      margin-bottom: 10px;
+      font-size: 28px;
+      color: #ffe500; /* RuneScape chatbox yellow */
+      margin-bottom: 20px;
     }
     
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background: #e9d8b4;
-      border: 3px solid #8b5a2b;
-      border-radius: 12px;
+      background: #222; /* Slightly lighter panel background */
+      border: 2px solid #555;
+      border-radius: 8px;
       padding: 20px;
-      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 10px #000;
     }
     
     textarea {
       width: 100%;
-      height: 150px;
+      height: 140px;
       margin-bottom: 10px;
-      border: 2px solid #8b5a2b;
-      background-color: #fff8dc;
-      color: #4b3b2b;
-      font-family: 'Pixelify Sans', Arial, sans-serif;
+      border: 2px solid #555;
+      background-color: #000; /* Dark text input like RuneScape */
+      color: #f5f5c6;
+      font-family: Arial, sans-serif;
       font-size: 14px;
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 10px;
     }
     
@@ -52,18 +47,19 @@
       display: block;
       width: 100%;
       padding: 12px;
-      background-color: #5a7630;
-      color: white;
-      font-family: 'Pixelify Sans', Arial, sans-serif;
-      border: 2px solid #3d5223;
-      border-radius: 10px;
-      font-size: 18px;
+      background-color: #006400; /* Darker RuneScape green */
+      color: #f5f5c6;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      border: 2px solid #003300;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
       margin-top: 10px;
     }
     
     button:hover {
-      background-color: #729d43;
+      background-color: #228B22;
     }
     
     #response {
@@ -71,14 +67,15 @@
     }
     
     .bubble {
-      background: #f5e6c4;
+      background: #333;
       padding: 15px;
-      border: 3px solid #8b5a2b;
-      border-radius: 10px;
+      border: 2px solid #666;
+      border-radius: 8px;
       margin-bottom: 10px;
-      color: #4b3b2b;
+      color: #f5f5c6;
     }
     </style>
+    
     
 </head>
 <body>
