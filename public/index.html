@@ -28,6 +28,9 @@
     const textarea = document.getElementById('userInput');
     const submitBtn = document.getElementById('submitBtn');
     const responseBox = document.getElementById('response');
+    const FREE_MESSAGES = 5;
+    const USAGE_KEY = 'runescape_translator_usage';
+
 
     async function analyze() {
   let usage = parseInt(localStorage.getItem('runescape_translator_usage') || '0', 10);
