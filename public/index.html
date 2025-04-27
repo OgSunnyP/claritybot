@@ -30,21 +30,38 @@
     const responseBox = document.getElementById('response');
 
     async function analyze() {
-      const userInput = textarea.value.trim();
-      if (!userInput) return;
+  let usage = parseInt(localStorage.getItem('runescape_translator_usage') || '0', 10);
 
-      responseBox.innerHTML = '<p>Analyzing...</p>';
+  if (usage >= FREE_MESSAGES) {
+    responseBox.innerHTML = `
+      <div class="bubble">
+        <strong>You've used your 5 free translations!</strong><br>
+        Upgrade to unlock unlimited translations and become a true Gielinor scholar.
+      </div>
+    `;
+    return;
+  }
 
-      const res = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userInput }),
-      });
+  // 🛠 INCREMENT USAGE IMMEDIATELY
+  usage += 1;
+  localStorage.setItem('runescape_translator_usage', usage);
 
-      const data = await res.json();
-      const reply = data.result || 'Something went wrong.';
-      responseBox.innerHTML = `<div class="bubble">${reply}</div>`;
-    }
+  const userInput = textarea.value.trim();
+  if (!userInput) return;
+
+  responseBox.innerHTML = '<p>Analyzing...</p>';
+
+  const res = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userInput }),
+  });
+
+  const data = await res.json();
+  const reply = data.result || 'Something went wrong.';
+  responseBox.innerHTML = `<div class="bubble">${reply}</div>`;
+}
+
 
     submitBtn.addEventListener('click', analyze);
 
