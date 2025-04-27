@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       color: #f5f5c6;
-      overflow-x: hidden; /* 💥 prevents weird right overflow on mobile/desktop */
+      overflow-x: hidden;
     }
     
     h1 {
@@ -23,12 +23,13 @@
     
     .container {
       max-width: 600px;
-      width: 90%; /* 💥 fluid on mobile */
+      width: 90%;
       margin: 0 auto;
       background: #222;
       border: 2px solid #555;
       border-radius: 8px;
-      padding: 20px;
+      padding: 20px; /* 💥 This padding forces inside spacing */
+      box-sizing: border-box; /* 💥 THIS IS THE MISSING KEY */
       box-shadow: 0 0 10px #000;
     }
     
@@ -43,6 +44,7 @@
       font-size: 16px;
       border-radius: 6px;
       padding: 10px;
+      box-sizing: border-box; /* 💥 Critical to prevent overflow */
       resize: vertical;
     }
     
@@ -59,6 +61,7 @@
       font-size: 18px;
       cursor: pointer;
       margin-top: 10px;
+      box-sizing: border-box; /* ✅ Consistent sizing */
     }
     
     button:hover {
@@ -77,6 +80,7 @@
       margin-bottom: 10px;
       color: #f5f5c6;
       font-size: 16px;
+      box-sizing: border-box;
     }
     
     @media only screen and (max-width: 600px) {
@@ -99,6 +103,7 @@
       }
     }
     </style>
+    
     
     
     
