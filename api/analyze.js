@@ -1,14 +1,10 @@
-const OpenAI = require("openai");
+const OpenAI = require('openai');
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-module.exports = async (req, res) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
+async function analyze(req, res) {
   const { userInput } = req.body;
 
   const systemPrompt = `
@@ -21,10 +17,10 @@ Avoid referencing real-world political names or companies directly — map them 
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: 'gpt-4',
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userInput },
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userInput },
       ],
       temperature: 0.8,
     });
@@ -32,7 +28,9 @@ Avoid referencing real-world political names or companies directly — map them 
     const reply = completion.choices[0].message.content;
     res.status(200).json({ result: reply });
   } catch (error) {
-    console.error("OpenAI error:", error.message);
-    res.status(500).json({ error: "Failed to fetch response." });
+    console.error('OpenAI error:', error.message);
+    res.status(500).json({ error: 'Failed to fetch response.' });
   }
-};
+}
+
+module.exports = analyze;

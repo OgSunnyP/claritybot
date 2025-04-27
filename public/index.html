@@ -1,251 +1,59 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ClarityBot</title>
-    <style>
-      :root {
-        --bg: #f0f4f8;
-        --card: #ffffff;
-        --border: #dce1e7;
-        --text: #333;
-        --highlight: #bcdffb;
-        --font: "Segoe UI", sans-serif;
-      }
-
-      body {
-        font-family: var(--font);
-        background-color: var(--bg);
-        color: var(--text);
-        max-width: 600px;
-        margin: 3rem auto;
-        padding: 1rem;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-        margin-bottom: 1rem;
-      }
-
-      textarea {
-        width: 100%;
-        height: 140px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        padding: 12px;
-        font-size: 1rem;
-        background: var(--card);
-        resize: vertical;
-      }
-
-      button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        background-color: var(--highlight);
-        border: none;
-        border-radius: 999px;
-        cursor: pointer;
-        margin-top: 10px;
-        transition: background-color 0.2s ease;
-      }
-
-      button:hover {
-        background-color: #9ecff0;
-      }
-
-      #response {
-        margin-top: 2rem;
-        padding: 1rem;
-        background-color: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        white-space: pre-wrap;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
-      }
-
-      .bubble {
-        background: #edf6fb;
-        padding: 12px 16px;
-        border-radius: 16px;
-        margin-bottom: 16px;
-        line-height: 1.6;
-      }
-
-      .bubble.secure {
-        border-left: 4px solid #77c49b;
-      }
-      .bubble.anxious {
-        border-left: 4px solid #f7a6a6;
-      }
-      .bubble.explainer {
-        border-left: 4px solid #a6c8f7;
-      }
-    </style>
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <title>RuneScape Translator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { text-align: center; }
+    .container { max-width: 600px; margin: 0 auto; }
+    textarea { width: 100%; height: 150px; margin-bottom: 10px; }
+    button { display: block; width: 100%; padding: 10px; background-color: #4f9fe8; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+    button:hover { background-color: #3c7fc4; }
+    #response { margin-top: 20px; }
+    .bubble { background: #e5f1fb; padding: 15px; border-radius: 12px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
     <h1>RuneScape Translator</h1>
-    <p>
-      Paste a news article or real-world event. I’ll translate it into OSRS
-      terms:
-    </p>
-
-    <textarea
-      id="userInput"
-      placeholder="Ex: Elon Musk's AI lawsuit... what does this mean in RuneScape terms?"
-    ></textarea>
-
-    <br />
+    <p>Paste a news article or real-world event. I’ll translate it into OSRS terms:</p>
+    <textarea id="userInput" placeholder="Ex: Elon Musk's AI lawsuit... what does this mean in RuneScape terms?"></textarea>
     <button id="submitBtn">Translate to RuneScape</button>
-
     <div id="response"></div>
+  </div>
 
-    <script>
-      const textarea = document.getElementById("userInput");
-      const submitBtn = document.getElementById("submitBtn");
-      const responseBox = document.getElementById("response");
+  <script>
+    const textarea = document.getElementById('userInput');
+    const submitBtn = document.getElementById('submitBtn');
+    const responseBox = document.getElementById('response');
 
-      const USAGE_KEY = "claritybot_usage";
-      const CREDITS_KEY = "claritybot_credits";
-      const MAX_FREE_MESSAGES = 3;
-      const UNLOCK_AMOUNT = 100;
+    async function analyze() {
+      const userInput = textarea.value.trim();
+      if (!userInput) return;
 
-      let usageCount = parseInt(localStorage.getItem(USAGE_KEY)) || 0;
-      let credits = parseInt(localStorage.getItem(CREDITS_KEY)) || 0;
+      responseBox.innerHTML = '<p>Analyzing...</p>';
 
-      // If Stripe redirect adds unlocked=true, grant credits
-      if (window.location.search.includes("unlocked=true")) {
-        credits += UNLOCK_AMOUNT;
-        localStorage.setItem(CREDITS_KEY, credits);
-        const url = new URL(window.location.href);
-        url.searchParams.delete("unlocked");
-        window.history.replaceState({}, document.title, url.toString()); // Clean the URL
-      }
-
-      if (usageCount >= MAX_FREE_MESSAGES + credits) {
-        showPaywall();
-      }
-
-      async function analyze() {
-        if (usageCount >= MAX_FREE_MESSAGES + credits) {
-          showPaywall();
-          return;
-        }
-
-        const userInput = textarea.value;
-        if (!userInput.trim()) return;
-
-        responseBox.innerHTML = "<p>Analyzing...</p>";
-
-        const res = await fetch("/api/analyze", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userInput }),
-        });
-
-        const data = await res.json();
-        const raw = data.result || "Something went wrong.";
-        const bubbles = parseResponse(raw);
-        responseBox.innerHTML = bubbles;
-
-        usageCount++;
-        localStorage.setItem(USAGE_KEY, usageCount);
-
-        if (usageCount >= MAX_FREE_MESSAGES + credits) {
-          setTimeout(showPaywall, 500);
-        }
-      }
-
-      function showPaywall() {
-        responseBox.innerHTML = `
-          <div class="bubble explainer" style="text-align: center;">
-            <h3 style="margin-top: 0;">You’ve used your reflections 💬</h3>
-            <p style="margin-bottom: 1.5rem;">
-              Unlock <strong>100 more reflections</strong> for just <strong>$2</strong>.
-            </p>
-
-            <a href="https://buy.stripe.com/00gdRa4Wi7arcusaEE" target="_blank" style="text-decoration: none;">
-              <button style="
-                background-color: #4f9fe8;
-                border: none;
-                border-radius: 999px;
-                padding: 12px 24px;
-                color: white;
-                font-size: 1rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: background-color 0.2s ease;
-              ">💳 Unlock More Reflections</button>
-            </a>
-
-            <br /><br />
-
-            <button onclick="manuallyUnlock()" style="
-              background-color: #e9f5ff;
-              border: none;
-              border-radius: 999px;
-              padding: 10px 22px;
-              font-size: 0.95rem;
-              font-weight: 500;
-              cursor: pointer;
-              color: #333;
-            ">✅ Already paid? Click here</button>
-          </div>
-        `;
-      }
-
-      function manuallyUnlock() {
-        credits += UNLOCK_AMOUNT;
-        localStorage.setItem(CREDITS_KEY, credits);
-        location.reload();
-      }
-
-      function parseResponse(text) {
-        const secureStart = text.indexOf("1. Secure Attachment Response:");
-        const anxiousStart = text.indexOf("2. Anxious Attachment Response:");
-        const explanationStart = text.search(
-          /3\.|Explanation:|Psychological Difference:/i,
-        );
-
-        let secure = "",
-          anxious = "",
-          explainer = "";
-
-        if (secureStart !== -1 && anxiousStart !== -1) {
-          secure = text
-            .substring(secureStart + 29, anxiousStart)
-            .trim()
-            .replace(/^[:\-\s]+/, "");
-        }
-
-        if (anxiousStart !== -1 && explanationStart !== -1) {
-          anxious = text
-            .substring(anxiousStart + 31, explanationStart)
-            .trim()
-            .replace(/^[:\-\s]+/, "");
-        }
-
-        if (explanationStart !== -1) {
-          explainer = text
-            .substring(explanationStart)
-            .replace(/^(3\.\s*)?(Explanation:|Psychological Difference:)/i, "")
-            .trim();
-        }
-
-        return `
-          ${secure ? `<div class="bubble secure"><strong>Secure:</strong><br>${secure}</div>` : ""}
-          ${anxious ? `<div class="bubble anxious"><strong>Anxious:</strong><br>${anxious}</div>` : ""}
-          ${explainer ? `<div class="bubble explainer"><strong>Explanation:</strong><br>${explainer}</div>` : ""}
-        `;
-      }
-
-      submitBtn.addEventListener("click", analyze);
-      textarea.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          analyze();
-        }
+      const res = await fetch('/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userInput }),
       });
-    </script>
-  </body>
+
+      const data = await res.json();
+      const reply = data.result || 'Something went wrong.';
+      responseBox.innerHTML = `<div class="bubble">${reply}</div>`;
+    }
+
+    submitBtn.addEventListener('click', analyze);
+
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        analyze();
+      }
+    });
+  </script>
+</body>
 </html>
