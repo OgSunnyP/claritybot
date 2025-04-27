@@ -50,7 +50,8 @@ async function analyze(req, res) {
   Stay witty. Stay brief. Stay in character.
   `;
   
-  
+  // 🛠 ADD THIS LINE RIGHT AFTER PULLING userInput:
+  console.log(`[User Submission] ${userInput}`);
   
 
   try {
