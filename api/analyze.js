@@ -65,6 +65,7 @@ async function analyze(req, res) {
     });
 
     const reply = completion.choices[0].message.content;
+    console.log(`[Bot Response] ${reply}`);
     res.status(200).json({ result: reply });
   } catch (error) {
     console.error('OpenAI error:', error.message);
